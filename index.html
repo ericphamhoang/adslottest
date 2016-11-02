@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="adSlot">
 <head>
     <meta charset="UTF-8">
     <title>Adslot Test</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<form class="form-wrapper cf">
+<form class="form-wrapper cf" ng-controller="searchController">
     <h2>Adslot Test</h2>
     <input type="text" placeholder="Search here..." required>
     <button type="submit">Search</button>
 </form>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="js/data.js"></script>
+<!--Angular Controller-->
+<script src="js/main.js"></script>
 </body>
 </html>
