@@ -10,12 +10,12 @@ app.controller("mainController", function ($scope) {
     $scope.sites = sites;
     $scope.categories = categories;
 
-    //Process indexing
-    $scope.searchIndex = lunr(function () {
-        this.field('siteName');
-        this.field('categories');
-        this.ref('id')
-    });
+    ////Process indexing
+    //$scope.searchIndex = lunr(function () {
+    //    this.field('siteName');
+    //    this.field('categories');
+    //    this.ref('id')
+    //});
 
     $scope.sites.forEach(function(siteElm, siteKey){
 
@@ -30,13 +30,10 @@ app.controller("mainController", function ($scope) {
 
         });
 
-        console.log(elmCategories.toString());
-        $scope.searchIndex.add({
-            id: siteElm.id,
-            siteName: siteElm.siteName,
-            categories: elmCategories.toString()
-        })
+        siteElm.categories = elmCategories;
     });
+
+    console.log($scope.sites);
 
     //Fire search function
     $scope.search = function(){
@@ -44,22 +41,29 @@ app.controller("mainController", function ($scope) {
         //split all query by "," then trim all elements in array
         querryArr = $scope.queries.split(',').map(function(e){return e.trim();});
 
-        var rs = [];
+        $scope.results = [];
 
         for (i=0; i<querryArr.length; i++)
         {
-            rs = rs.concat($scope.searchIndex.search(querryArr[i]));
-        }
+            queryElm = querryArr[i];
+            //rs = rs.concat($scope.searchIndex.search(querryArr[i]));
 
-        $scope.results = [];
-
-        rs.forEach(function(value, key){
-
-            $scope.sites.forEach(function(siteElm, siteKey) {
-                if (value.ref == siteElm.id)
+            $scope.sites.forEach(function(siteElm, siteKey){
+                if (siteElm.siteName.indexOf(queryElm) != -1) {
                     $scope.results.push(siteElm);
-            });
-        });
+                }
+                else {
+                    for (i = 0; i < siteElm.categories.length; i++)
+                    {
+                        if (siteElm.categories[i].indexOf(queryElm) != -1)
+                        {
+                            $scope.results.push(siteElm);
+                            break;
+                        }
+                    }
+                }
+            })
+        }
 
         console.log($scope.results);
     }
