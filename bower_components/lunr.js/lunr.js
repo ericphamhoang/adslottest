@@ -7,16 +7,16 @@
 ;(function(){
 
 /**
- * Convenience function for instantiating a new lunr index and configuring it
+ * Convenience function for instantiating a new lunr searchIndex and configuring it
  * with the default pipeline functions and the passed config function.
  *
- * When using this convenience function a new index will be created with the
+ * When using this convenience function a new searchIndex will be created with the
  * following functions already in the pipeline:
  *
  * lunr.StopWordFilter - filters out any stop words before they enter the
- * index
+ * searchIndex
  *
- * lunr.stemmer - stems the tokens before entering the index.
+ * lunr.stemmer - stems the tokens before entering the searchIndex.
  *
  * Example:
  *
@@ -187,7 +187,7 @@ lunr.EventEmitter.prototype.hasHandler = function (name) {
 
 /**
  * A function for splitting a string into tokens ready to be inserted into
- * the search index. Uses `lunr.tokenizer.separator` to split strings, change
+ * the search searchIndex. Uses `lunr.tokenizer.separator` to split strings, change
  * the value of this property to change how strings are split into tokens.
  *
  * @module
@@ -260,9 +260,9 @@ lunr.tokenizer.registeredFunctions = {
 /**
  * Register a tokenizer function.
  *
- * Functions that are used as tokenizers should be registered if they are to be used with a serialised index.
+ * Functions that are used as tokenizers should be registered if they are to be used with a serialised searchIndex.
  *
- * Registering a function does not add it to an index, functions must still be associated with a specific index for them to be used when indexing and searching documents.
+ * Registering a function does not add it to an searchIndex, functions must still be associated with a specific searchIndex for them to be used when indexing and searching documents.
  *
  * @param {Function} fn The function to register.
  * @param {String} label The label to register this function with
@@ -283,8 +283,8 @@ lunr.tokenizer.registerFunction = function (fn, label) {
 
 /**
  * lunr.Pipelines maintain an ordered list of functions to be applied to all
- * tokens in documents entering the search index and queries being ran against
- * the index.
+ * tokens in documents entering the search searchIndex and queries being ran against
+ * the searchIndex.
  *
  * An instance of lunr.Index created with the lunr shortcut will contain a
  * pipeline with a stop word filter and an English language stemmer. Extra
@@ -292,11 +292,11 @@ lunr.tokenizer.registerFunction = function (fn, label) {
  * default functions can be removed.
  *
  * When run the pipeline will call each function in turn, passing a token, the
- * index of that token in the original list of all tokens and finally a list of
+ * searchIndex of that token in the original list of all tokens and finally a list of
  * all the original tokens.
  *
  * The output of functions in the pipeline will be passed to the next function
- * in the pipeline. To exclude a token from entering the index the function
+ * in the pipeline. To exclude a token from entering the searchIndex the function
  * should return undefined, the rest of the pipeline will not be called with
  * this token.
  *
@@ -349,7 +349,7 @@ lunr.Pipeline.warnIfFunctionNotRegistered = function (fn) {
   var isRegistered = fn.label && (fn.label in this.registeredFunctions)
 
   if (!isRegistered) {
-    lunr.utils.warn('Function is not registered with pipeline. This may cause problems when serialising the index.\n', fn)
+    lunr.utils.warn('Function is not registered with pipeline. This may cause problems when serialising the searchIndex.\n', fn)
   }
 }
 
@@ -528,7 +528,7 @@ lunr.Vector = function () {
  * in a lunr.Vector.
  *
  * @private
- * @param {Number} The index of the node in the vector.
+ * @param {Number} The searchIndex of the node in the vector.
  * @param {Object} The data at this node in the vector.
  * @param {lunr.Vector.Node} The node directly after this node in the vector.
  * @constructor
@@ -543,7 +543,7 @@ lunr.Vector.Node = function (idx, val, next) {
 /**
  * Inserts a new value at a position in a vector.
  *
- * @param {Number} The index at which to insert a value.
+ * @param {Number} The searchIndex at which to insert a value.
  * @param {Object} The object to insert in the vector.
  * @memberOf Vector.
  */
@@ -731,7 +731,7 @@ lunr.SortedSet.prototype.forEach = function (fn, ctx) {
 }
 
 /**
- * Returns the index at which a given element can be found in the
+ * Returns the searchIndex at which a given element can be found in the
  * sorted set, or -1 if it is not present.
  *
  * @param {Object} elem The object to locate in the sorted set.
@@ -885,7 +885,7 @@ lunr.SortedSet.prototype.toJSON = function () {
  */
 
 /**
- * lunr.Index is object that manages a search index.  It contains the indexes
+ * lunr.Index is object that manages a search searchIndex.  It contains the indexes
  * and stores all the tokens and document lookups.  It also provides the main
  * user facing API for the library.
  *
@@ -909,7 +909,7 @@ lunr.Index = function () {
 }
 
 /**
- * Bind a handler to events being emitted by the index.
+ * Bind a handler to events being emitted by the searchIndex.
  *
  * The handler can be bound to many events at the same time.
  *
@@ -923,7 +923,7 @@ lunr.Index.prototype.on = function () {
 }
 
 /**
- * Removes a handler from an event being emitted by the index.
+ * Removes a handler from an event being emitted by the searchIndex.
  *
  * @param {String} eventName The name of events to remove the function from.
  * @param {Function} fn The serialised set to load.
@@ -934,9 +934,9 @@ lunr.Index.prototype.off = function (name, fn) {
 }
 
 /**
- * Loads a previously serialised index.
+ * Loads a previously serialised searchIndex.
  *
- * Issues a warning if the index being imported was serialised
+ * Issues a warning if the searchIndex being imported was serialised
  * by a different version of lunr.
  *
  * @param {Object} serialisedData The serialised set to load.
@@ -964,14 +964,14 @@ lunr.Index.load = function (serialisedData) {
 
 /**
  * Adds a field to the list of fields that will be searchable within documents
- * in the index.
+ * in the searchIndex.
  *
  * An optional boost param can be passed to affect how much tokens in this field
  * rank in search results, by default the boost value is 1.
  *
- * Fields should be added before any documents are added to the index, fields
- * that are added after documents are added to the index will only apply to new
- * documents added to the index.
+ * Fields should be added before any documents are added to the searchIndex, fields
+ * that are added after documents are added to the searchIndex will only apply to new
+ * documents added to the searchIndex.
  *
  * @param {String} fieldName The name of the field within the document that
  * should be indexed
@@ -989,17 +989,17 @@ lunr.Index.prototype.field = function (fieldName, opts) {
 }
 
 /**
- * Sets the property used to uniquely identify documents added to the index,
+ * Sets the property used to uniquely identify documents added to the searchIndex,
  * by default this property is 'id'.
  *
- * This should only be changed before adding documents to the index, changing
- * the ref property without resetting the index can lead to unexpected results.
+ * This should only be changed before adding documents to the searchIndex, changing
+ * the ref property without resetting the searchIndex can lead to unexpected results.
  *
  * The value of ref can be of any type but it _must_ be stably comparable and
  * orderable.
  *
  * @param {String} refName The property to use to uniquely identify the
- * documents in the index.
+ * documents in the searchIndex.
  * @param {Boolean} emitEvent Whether to emit add events, defaults to true
  * @returns {lunr.Index}
  * @memberOf Index
@@ -1010,11 +1010,11 @@ lunr.Index.prototype.ref = function (refName) {
 }
 
 /**
- * Sets the tokenizer used for this index.
+ * Sets the tokenizer used for this searchIndex.
  *
- * By default the index will use the default tokenizer, lunr.tokenizer. The tokenizer
- * should only be changed before adding documents to the index. Changing the tokenizer
- * without re-building the index can lead to unexpected results.
+ * By default the searchIndex will use the default tokenizer, lunr.tokenizer. The tokenizer
+ * should only be changed before adding documents to the searchIndex. Changing the tokenizer
+ * without re-building the searchIndex can lead to unexpected results.
  *
  * @param {Function} fn The function to use as a tokenizer.
  * @returns {lunr.Index}
@@ -1024,7 +1024,7 @@ lunr.Index.prototype.tokenizer = function (fn) {
   var isRegistered = fn.label && (fn.label in lunr.tokenizer.registeredFunctions)
 
   if (!isRegistered) {
-    lunr.utils.warn('Function is not a registered tokenizer. This may cause problems when serialising the index')
+    lunr.utils.warn('Function is not a registered tokenizer. This may cause problems when serialising the searchIndex')
   }
 
   this.tokenizerFn = fn
@@ -1032,17 +1032,17 @@ lunr.Index.prototype.tokenizer = function (fn) {
 }
 
 /**
- * Add a document to the index.
+ * Add a document to the searchIndex.
  *
- * This is the way new documents enter the index, this function will run the
- * fields from the document through the index's pipeline and then add it to
- * the index, it will then show up in search results.
+ * This is the way new documents enter the searchIndex, this function will run the
+ * fields from the document through the searchIndex's pipeline and then add it to
+ * the searchIndex, it will then show up in search results.
  *
- * An 'add' event is emitted with the document that has been added and the index
+ * An 'add' event is emitted with the document that has been added and the searchIndex
  * the document has been added to. This event can be silenced by passing false
  * as the second argument to add.
  *
- * @param {Object} doc The document to add to the index.
+ * @param {Object} doc The document to add to the searchIndex.
  * @param {Boolean} emitEvent Whether or not to emit events, default true.
  * @memberOf Index
  */
@@ -1094,20 +1094,20 @@ lunr.Index.prototype.add = function (doc, emitEvent) {
 }
 
 /**
- * Removes a document from the index.
+ * Removes a document from the searchIndex.
  *
  * To make sure documents no longer show up in search results they can be
- * removed from the index using this method.
+ * removed from the searchIndex using this method.
  *
  * The document passed only needs to have the same ref property value as the
- * document that was added to the index, they could be completely different
+ * document that was added to the searchIndex, they could be completely different
  * objects.
  *
- * A 'remove' event is emitted with the document that has been removed and the index
+ * A 'remove' event is emitted with the document that has been removed and the searchIndex
  * the document has been removed from. This event can be silenced by passing false
  * as the second argument to remove.
  *
- * @param {Object} doc The document to remove from the index.
+ * @param {Object} doc The document to remove from the searchIndex.
  * @param {Boolean} emitEvent Whether to emit remove events, defaults to true
  * @memberOf Index
  */
@@ -1129,20 +1129,20 @@ lunr.Index.prototype.remove = function (doc, emitEvent) {
 }
 
 /**
- * Updates a document in the index.
+ * Updates a document in the searchIndex.
  *
- * When a document contained within the index gets updated, fields changed,
+ * When a document contained within the searchIndex gets updated, fields changed,
  * added or removed, to make sure it correctly matched against search queries,
- * it should be updated in the index.
+ * it should be updated in the searchIndex.
  *
  * This method is just a wrapper around `remove` and `add`
  *
- * An 'update' event is emitted with the document that has been updated and the index.
+ * An 'update' event is emitted with the document that has been updated and the searchIndex.
  * This event can be silenced by passing false as the second argument to update. Only
  * an update event will be fired, the 'add' and 'remove' events of the underlying calls
  * are silenced.
  *
- * @param {Object} doc The document to update in the index.
+ * @param {Object} doc The document to update in the searchIndex.
  * @param {Boolean} emitEvent Whether to emit update events, defaults to true
  * @see Index.prototype.remove
  * @see Index.prototype.add
@@ -1158,7 +1158,7 @@ lunr.Index.prototype.update = function (doc, emitEvent) {
 }
 
 /**
- * Calculates the inverse document frequency for a token within the index.
+ * Calculates the inverse document frequency for a token within the searchIndex.
  *
  * @param {String} token The token to calculate the idf of.
  * @see Index.prototype.idf
@@ -1180,7 +1180,7 @@ lunr.Index.prototype.idf = function (term) {
 }
 
 /**
- * Searches the index using the passed query.
+ * Searches the searchIndex using the passed query.
  *
  * Queries should be a string, multiple words are allowed and will lead to an
  * AND based query, e.g. `idx.search('foo bar')` will run a search for
@@ -1191,13 +1191,13 @@ lunr.Index.prototype.idf = function (term) {
  * query term.
  *
  * Each query term is expanded, so that the term 'he' might be expanded to
- * 'hello' and 'help' if those terms were already included in the index.
+ * 'hello' and 'help' if those terms were already included in the searchIndex.
  *
  * Matching documents are returned as an array of objects, each object contains
- * the matching document ref, as set for this index, and the similarity score
+ * the matching document ref, as set for this searchIndex, and the similarity score
  * for this document against the query.
  *
- * @param {String} query The query to search the index with.
+ * @param {String} query The query to search the searchIndex with.
  * @returns {Object}
  * @see Index.prototype.idf
  * @see Index.prototype.documentVector
@@ -1299,7 +1299,7 @@ lunr.Index.prototype.documentVector = function (documentRef) {
 }
 
 /**
- * Returns a representation of the index ready for serialisation.
+ * Returns a representation of the searchIndex ready for serialisation.
  *
  * @returns {Object}
  * @memberOf Index
@@ -1318,21 +1318,21 @@ lunr.Index.prototype.toJSON = function () {
 }
 
 /**
- * Applies a plugin to the current index.
+ * Applies a plugin to the current searchIndex.
  *
- * A plugin is a function that is called with the index as its context.
- * Plugins can be used to customise or extend the behaviour the index
+ * A plugin is a function that is called with the searchIndex as its context.
+ * Plugins can be used to customise or extend the behaviour the searchIndex
  * in some way. A plugin is just a function, that encapsulated the custom
- * behaviour that should be applied to the index.
+ * behaviour that should be applied to the searchIndex.
  *
- * The plugin function will be called with the index as its argument, additional
+ * The plugin function will be called with the searchIndex as its argument, additional
  * arguments can also be passed when calling use. The function will be called
- * with the index as its context.
+ * with the searchIndex as its context.
  *
  * Example:
  *
  *     var myPlugin = function (idx, arg1, arg2) {
- *       // `this` is the index to be extended
+ *       // `this` is the searchIndex to be extended
  *       // apply any extensions etc here.
  *     }
  *
@@ -1355,7 +1355,7 @@ lunr.Index.prototype.use = function (plugin) {
 
 /**
  * lunr.Store is a simple key-value store used for storing sets of tokens for
- * documents stored in index.
+ * documents stored in searchIndex.
  *
  * @constructor
  * @module
@@ -1834,7 +1834,7 @@ lunr.Pipeline.registerFunction(lunr.stopWordFilter, 'stopWordFilter')
 /**
  * lunr.trimmer is a pipeline function for trimming non word
  * characters from the begining and end of tokens before they
- * enter the index.
+ * enter the searchIndex.
  *
  * This implementation may not work correctly for non latin
  * characters and should either be removed or adapted for use
@@ -1858,7 +1858,7 @@ lunr.Pipeline.registerFunction(lunr.trimmer, 'trimmer')
 
 /**
  * lunr.TokenStore is used for efficient storing and lookup of the reverse
- * index of token to document ref.
+ * searchIndex of token to document ref.
  *
  * @constructor
  */

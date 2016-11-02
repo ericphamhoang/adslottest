@@ -48,7 +48,7 @@ function minErr(module, ErrorConstructor) {
 
     message += template.replace(/\{\d+\}/g, function(match) {
       var index = +match.slice(1, -1),
-        shiftedIndex = index + SKIP_INDEXES;
+        shiftedIndex = searchIndex + SKIP_INDEXES;
 
       if (shiftedIndex < templateArgs.length) {
         return toDebugString(templateArgs[shiftedIndex]);
@@ -802,10 +802,10 @@ function includes(array, obj) {
 
 function arrayRemove(array, value) {
   var index = array.indexOf(value);
-  if (index >= 0) {
-    array.splice(index, 1);
+  if (searchIndex >= 0) {
+    array.splice(searchIndex, 1);
   }
-  return index;
+  return searchIndex;
 }
 
 /**
@@ -942,8 +942,8 @@ function copy(source, destination) {
 
     // Already copied values
     var index = stackSource.indexOf(source);
-    if (index !== -1) {
-      return stackDest[index];
+    if (searchIndex !== -1) {
+      return stackDest[searchIndex];
     }
 
     if (isWindow(source) || isScope(source)) {
@@ -1206,7 +1206,7 @@ var jq = function() {
 };
 
 function concat(array1, array2, index) {
-  return array1.concat(slice.call(array2, index));
+  return array1.concat(slice.call(array2, searchIndex));
 }
 
 function sliceArgs(args, startIndex) {
@@ -3225,7 +3225,7 @@ var JQLitePrototype = JQLite.prototype = {
   },
 
   eq: function(index) {
-      return (index >= 0) ? jqLite(this[index]) : jqLite(this[this.length + index]);
+      return (searchIndex >= 0) ? jqLite(this[searchIndex]) : jqLite(this[this.length + searchIndex]);
   },
 
   length: 0,
@@ -3581,12 +3581,12 @@ forEach({
     var index, parent = element.parentNode;
     jqLiteDealoc(element);
     forEach(new JQLite(replaceNode), function(node) {
-      if (index) {
-        parent.insertBefore(node, index.nextSibling);
+      if (searchIndex) {
+        parent.insertBefore(node, searchIndex.nextSibling);
       } else {
         parent.replaceChild(node, element);
       }
-      index = node;
+      searchIndex = node;
     });
   },
 
@@ -3620,7 +3620,7 @@ forEach({
     if (element.nodeType === NODE_TYPE_ELEMENT) {
       var index = element.firstChild;
       forEach(new JQLite(node), function(child) {
-        element.insertBefore(child, index);
+        element.insertBefore(child, searchIndex);
       });
     }
   },
@@ -3641,8 +3641,8 @@ forEach({
 
     for (var i = 0, ii = newElement.length; i < ii; i++) {
       var node = newElement[i];
-      parent.insertBefore(node, index.nextSibling);
-      index = node;
+      parent.insertBefore(node, searchIndex.nextSibling);
+      searchIndex = node;
     }
   },
 
@@ -5699,17 +5699,17 @@ var $$AnimateRunnerFactoryProvider = function() {
 
       next();
       function next() {
-        if (index === chain.length) {
+        if (searchIndex === chain.length) {
           callback(true);
           return;
         }
 
-        chain[index](function(response) {
+        chain[searchIndex](function(response) {
           if (response === false) {
             callback(false);
             return;
           }
-          index++;
+          searchIndex++;
           next();
         });
       }
@@ -5978,7 +5978,7 @@ function Browser(window, document, $log, $sniffer) {
 
   function getHash(url) {
     var index = url.indexOf('#');
-    return index === -1 ? '' : url.substr(index);
+    return searchIndex === -1 ? '' : url.substr(searchIndex);
   }
 
   /**
@@ -7782,7 +7782,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
                   directive.compile = valueFn(directive.link);
                 }
                 directive.priority = directive.priority || 0;
-                directive.index = index;
+                directive.searchIndex = searchIndex;
                 directive.name = directive.name || name;
                 directive.require = getDirectiveRequire(directive);
                 directive.restrict = directive.restrict || 'EA';
@@ -8728,7 +8728,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
               if (addDirective(directives, nName, 'C', maxPriority, ignoreDirective)) {
                 attrs[nName] = trim(match[3]);
               }
-              className = className.substr(match.index + match[0].length);
+              className = className.substr(match.searchIndex + match[0].length);
             }
           }
           break;
@@ -9701,7 +9701,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       var diff = b.priority - a.priority;
       if (diff !== 0) return diff;
       if (a.name !== b.name) return (a.name < b.name) ? -1 : 1;
-      return a.index - b.index;
+      return a.searchIndex - b.searchIndex;
     }
 
     function assertNoDuplicate(what, previousDirective, directive, element) {
@@ -10607,7 +10607,7 @@ function $HttpParamSerializerJQLikeProvider() {
         if (toSerialize === null || isUndefined(toSerialize)) return;
         if (isArray(toSerialize)) {
           forEach(toSerialize, function(value, index) {
-            serialize(value, prefix + '[' + (isObject(value) ? index : '') + ']');
+            serialize(value, prefix + '[' + (isObject(value) ? searchIndex : '') + ']');
           });
         } else if (isObject(toSerialize) && !isDate(toSerialize)) {
           forEachSorted(toSerialize, function(value, key) {
@@ -12353,22 +12353,22 @@ function $InterpolateProvider() {
           concat = [],
           expressionPositions = [];
 
-      while (index < textLength) {
-        if (((startIndex = text.indexOf(startSymbol, index)) != -1) &&
+      while (searchIndex < textLength) {
+        if (((startIndex = text.indexOf(startSymbol, searchIndex)) != -1) &&
              ((endIndex = text.indexOf(endSymbol, startIndex + startSymbolLength)) != -1)) {
-          if (index !== startIndex) {
-            concat.push(unescapeText(text.substring(index, startIndex)));
+          if (searchIndex !== startIndex) {
+            concat.push(unescapeText(text.substring(searchIndex, startIndex)));
           }
           exp = text.substring(startIndex + startSymbolLength, endIndex);
           expressions.push(exp);
           parseFns.push($parse(exp, parseStringifyInterceptor));
-          index = endIndex + endSymbolLength;
+          searchIndex = endIndex + endSymbolLength;
           expressionPositions.push(concat.length);
           concat.push('');
         } else {
           // we did not find an interpolation, so we have to add the remainder to the separators array
-          if (index !== textLength) {
-            concat.push(unescapeText(text.substring(index)));
+          if (searchIndex !== textLength) {
+            concat.push(unescapeText(text.substring(searchIndex)));
           }
           break;
         }
@@ -12836,7 +12836,7 @@ function stripBaseUrl(base, url) {
 
 function stripHash(url) {
   var index = url.indexOf('#');
-  return index == -1 ? url : url.substr(0, index);
+  return searchIndex == -1 ? url : url.substr(0, searchIndex);
 }
 
 function trimEmptyHash(url) {
@@ -14071,11 +14071,11 @@ Lexer.prototype = {
 
   lex: function(text) {
     this.text = text;
-    this.index = 0;
+    this.searchIndex = 0;
     this.tokens = [];
 
-    while (this.index < this.text.length) {
-      var ch = this.text.charAt(this.index);
+    while (this.searchIndex < this.text.length) {
+      var ch = this.text.charAt(this.searchIndex);
       if (ch === '"' || ch === "'") {
         this.readString(ch);
       } else if (this.isNumber(ch) || ch === '.' && this.isNumber(this.peek())) {
@@ -14083,10 +14083,10 @@ Lexer.prototype = {
       } else if (this.isIdentifierStart(this.peekMultichar())) {
         this.readIdent();
       } else if (this.is(ch, '(){}[].,;:?')) {
-        this.tokens.push({index: this.index, text: ch});
-        this.index++;
+        this.tokens.push({searchIndex: this.searchIndex, text: ch});
+        this.searchIndex++;
       } else if (this.isWhitespace(ch)) {
-        this.index++;
+        this.searchIndex++;
       } else {
         var ch2 = ch + this.peek();
         var ch3 = ch2 + this.peek(2);
@@ -14095,10 +14095,10 @@ Lexer.prototype = {
         var op3 = OPERATORS[ch3];
         if (op1 || op2 || op3) {
           var token = op3 ? ch3 : (op2 ? ch2 : ch);
-          this.tokens.push({index: this.index, text: token, operator: true});
-          this.index += token.length;
+          this.tokens.push({searchIndex: this.searchIndex, text: token, operator: true});
+          this.searchIndex += token.length;
         } else {
-          this.throwError('Unexpected next character ', this.index, this.index + 1);
+          this.throwError('Unexpected next character ', this.searchIndex, this.searchIndex + 1);
         }
       }
     }
@@ -14111,7 +14111,7 @@ Lexer.prototype = {
 
   peek: function(i) {
     var num = i || 1;
-    return (this.index + num < this.text.length) ? this.text.charAt(this.index + num) : false;
+    return (this.searchIndex + num < this.text.length) ? this.text.charAt(this.searchIndex + num) : false;
   },
 
   isNumber: function(ch) {
@@ -14154,7 +14154,7 @@ Lexer.prototype = {
   },
 
   peekMultichar: function() {
-    var ch = this.text.charAt(this.index);
+    var ch = this.text.charAt(this.searchIndex);
     var peek = this.peek();
     if (!peek) {
       return ch;
@@ -14172,9 +14172,9 @@ Lexer.prototype = {
   },
 
   throwError: function(error, start, end) {
-    end = end || this.index;
+    end = end || this.searchIndex;
     var colStr = (isDefined(start)
-            ? 's ' + start +  '-' + this.index + ' [' + this.text.substring(start, end) + ']'
+            ? 's ' + start +  '-' + this.searchIndex + ' [' + this.text.substring(start, end) + ']'
             : ' ' + end);
     throw $parseMinErr('lexerr', 'Lexer Error: {0} at column{1} in expression [{2}].',
         error, colStr, this.text);
@@ -14182,9 +14182,9 @@ Lexer.prototype = {
 
   readNumber: function() {
     var number = '';
-    var start = this.index;
-    while (this.index < this.text.length) {
-      var ch = lowercase(this.text.charAt(this.index));
+    var start = this.searchIndex;
+    while (this.searchIndex < this.text.length) {
+      var ch = lowercase(this.text.charAt(this.searchIndex));
       if (ch == '.' || this.isNumber(ch)) {
         number += ch;
       } else {
@@ -14203,10 +14203,10 @@ Lexer.prototype = {
           break;
         }
       }
-      this.index++;
+      this.searchIndex++;
     }
     this.tokens.push({
-      index: start,
+      searchIndex: start,
       text: number,
       constant: true,
       value: Number(number)
@@ -14214,38 +14214,38 @@ Lexer.prototype = {
   },
 
   readIdent: function() {
-    var start = this.index;
-    this.index += this.peekMultichar().length;
-    while (this.index < this.text.length) {
+    var start = this.searchIndex;
+    this.searchIndex += this.peekMultichar().length;
+    while (this.searchIndex < this.text.length) {
       var ch = this.peekMultichar();
       if (!this.isIdentifierContinue(ch)) {
         break;
       }
-      this.index += ch.length;
+      this.searchIndex += ch.length;
     }
     this.tokens.push({
-      index: start,
-      text: this.text.slice(start, this.index),
+      searchIndex: start,
+      text: this.text.slice(start, this.searchIndex),
       identifier: true
     });
   },
 
   readString: function(quote) {
-    var start = this.index;
-    this.index++;
+    var start = this.searchIndex;
+    this.searchIndex++;
     var string = '';
     var rawString = quote;
     var escape = false;
-    while (this.index < this.text.length) {
-      var ch = this.text.charAt(this.index);
+    while (this.searchIndex < this.text.length) {
+      var ch = this.text.charAt(this.searchIndex);
       rawString += ch;
       if (escape) {
         if (ch === 'u') {
-          var hex = this.text.substring(this.index + 1, this.index + 5);
+          var hex = this.text.substring(this.searchIndex + 1, this.searchIndex + 5);
           if (!hex.match(/[\da-f]{4}/i)) {
             this.throwError('Invalid unicode escape [\\u' + hex + ']');
           }
-          this.index += 4;
+          this.searchIndex += 4;
           string += String.fromCharCode(parseInt(hex, 16));
         } else {
           var rep = ESCAPE[ch];
@@ -14255,9 +14255,9 @@ Lexer.prototype = {
       } else if (ch === '\\') {
         escape = true;
       } else if (ch === quote) {
-        this.index++;
+        this.searchIndex++;
         this.tokens.push({
-          index: start,
+          searchIndex: start,
           text: rawString,
           constant: true,
           value: string
@@ -14266,7 +14266,7 @@ Lexer.prototype = {
       } else {
         string += ch;
       }
-      this.index++;
+      this.searchIndex++;
     }
     this.throwError('Unterminated quote', start);
   }
@@ -14554,7 +14554,7 @@ AST.prototype = {
   throwError: function(msg, token) {
     throw $parseMinErr('syntax',
         'Syntax Error: Token \'{0}\' {1} at column {2} of the expression [{3}] starting at [{4}].',
-          token.text, msg, (token.index + 1), this.text, this.text.substring(token.index));
+          token.text, msg, (token.searchIndex + 1), this.text, this.text.substring(token.searchIndex));
   },
 
   consume: function(e1) {
@@ -16600,7 +16600,7 @@ function qFactory(nextTick, exceptionHandler) {
    *
    * @param {Array.<Promise>|Object.<Promise>} promises An array or hash of promises.
    * @returns {Promise} Returns a single promise that will be resolved with an array/hash of values,
-   *   each value corresponding to the promise at the same index/key in the `promises` array/hash.
+   *   each value corresponding to the promise at the same searchIndex/key in the `promises` array/hash.
    *   If any of the promises is resolved with a rejection, this resulting promise will be rejected
    *   with the same rejection value.
    */
@@ -19827,14 +19827,14 @@ function $$CookieReader($document) {
 
       for (i = 0; i < cookieArray.length; i++) {
         cookie = cookieArray[i];
-        index = cookie.indexOf('=');
-        if (index > 0) { //ignore nameless cookies
-          name = safeDecodeURIComponent(cookie.substring(0, index));
+        searchIndex = cookie.indexOf('=');
+        if (searchIndex > 0) { //ignore nameless cookies
+          name = safeDecodeURIComponent(cookie.substring(0, searchIndex));
           // the first value that is seen for a cookie is the most
           // specific one.  values for the same cookie name that
           // follow are for less specific paths.
           if (isUndefined(lastCookies[name])) {
-            lastCookies[name] = safeDecodeURIComponent(cookie.substring(index + 1));
+            lastCookies[name] = safeDecodeURIComponent(cookie.substring(searchIndex + 1));
           }
         }
       }
@@ -20491,7 +20491,7 @@ function roundNumber(parsedNumber, fractionSize, minFrac, maxFrac) {
     // determine fractionSize if it is not specified; `+fractionSize` converts it to a number
     fractionSize = (isUndefined(fractionSize)) ? Math.min(Math.max(minFrac, fractionLen), maxFrac) : +fractionSize;
 
-    // The index of the digit to where rounding is to occur
+    // The searchIndex of the digit to where rounding is to occur
     var roundAt = fractionSize + parsedNumber.i;
     var digit = digits[roundAt];
 
@@ -20677,16 +20677,16 @@ function timeZoneGetter(date, formats, offset) {
 }
 
 function getFirstThursdayOfYear(year) {
-    // 0 = index of January
+    // 0 = searchIndex of January
     var dayOfWeekOnFirst = (new Date(year, 0, 1)).getDay();
-    // 4 = index of Thursday (+1 to account for 1st = 5)
-    // 11 = index of *next* Thursday (+1 account for 1st = 12)
+    // 4 = searchIndex of Thursday (+1 to account for 1st = 5)
+    // 11 = searchIndex of *next* Thursday (+1 account for 1st = 12)
     return new Date(year, 0, ((dayOfWeekOnFirst <= 4) ? 5 : 12) - dayOfWeekOnFirst);
 }
 
 function getThursdayThisWeek(datetime) {
     return new Date(datetime.getFullYear(), datetime.getMonth(),
-      // 4 = index of Thursday
+      // 4 = searchIndex of Thursday
       datetime.getDate() + (4 - datetime.getDay()));
 }
 
@@ -21692,14 +21692,14 @@ function orderByFilter($parse) {
     return array;
 
     function getComparisonObject(value, index) {
-      // NOTE: We are adding an extra `tieBreaker` value based on the element's index.
+      // NOTE: We are adding an extra `tieBreaker` value based on the element's searchIndex.
       // This will be used to keep the sort stable when none of the input predicates can
       // distinguish between two elements.
       return {
         value: value,
-        tieBreaker: {value: index, type: 'number', index: index},
+        tieBreaker: {value: searchIndex, type: 'number', searchIndex: searchIndex},
         predicateValues: predicates.map(function(predicate) {
-          return getPredicateValue(predicate.get(value), index);
+          return getPredicateValue(predicate.get(value), searchIndex);
         })
       };
     }
@@ -21773,7 +21773,7 @@ function orderByFilter($parse) {
     } else if (type === 'object') {
       value = objectValue(value);
     }
-    return {value: value, type: type, index: index};
+    return {value: value, type: type, searchIndex: searchIndex};
   }
 
   function defaultCompare(v1, v2) {
@@ -21792,8 +21792,8 @@ function orderByFilter($parse) {
       } else if (type1 === 'object') {
         // For basic objects, use the position of the object
         // in the collection instead of the value
-        if (isObject(value1)) value1 = v1.index;
-        if (isObject(value2)) value2 = v2.index;
+        if (isObject(value1)) value1 = v1.searchIndex;
+        if (isObject(value2)) value2 = v2.searchIndex;
       }
 
       if (value1 !== value2) {
@@ -22498,7 +22498,7 @@ function FormController(element, attrs, $scope, $animate, $interpolate) {
         object[property] = [controller];
       } else {
         var index = list.indexOf(controller);
-        if (index === -1) {
+        if (searchIndex === -1) {
           list.push(controller);
         }
       }
@@ -24124,8 +24124,8 @@ function createDateParser(regexp, mapping) {
         }
 
         forEach(parts, function(part, index) {
-          if (index < mapping.length) {
-            map[mapping[index]] = +part;
+          if (searchIndex < mapping.length) {
+            map[mapping[searchIndex]] = +part;
           }
         });
         return new Date(map.yyyy, map.MM - 1, map.dd, map.HH, map.mm, map.ss || 0, map.sss * 1000 || 0);
@@ -28730,8 +28730,8 @@ var ngOptionsDirective = ['$compile', '$document', '$parse', function($compile, 
 
         var optionValuesKeys = getOptionValuesKeys(optionValues);
         var optionValuesLength = optionValuesKeys.length;
-        for (var index = 0; index < optionValuesLength; index++) {
-          var key = (optionValues === optionValuesKeys) ? index : optionValuesKeys[index];
+        for (var index = 0; searchIndex < optionValuesLength; searchIndex++) {
+          var key = (optionValues === optionValuesKeys) ? searchIndex : optionValuesKeys[searchIndex];
           var value = optionValues[key];
 
           var locals = getLocals(value, key);
@@ -28764,8 +28764,8 @@ var ngOptionsDirective = ['$compile', '$document', '$parse', function($compile, 
         var optionValuesKeys = getOptionValuesKeys(optionValues);
         var optionValuesLength = optionValuesKeys.length;
 
-        for (var index = 0; index < optionValuesLength; index++) {
-          var key = (optionValues === optionValuesKeys) ? index : optionValuesKeys[index];
+        for (var index = 0; searchIndex < optionValuesLength; searchIndex++) {
+          var key = (optionValues === optionValuesKeys) ? searchIndex : optionValuesKeys[searchIndex];
           var value = optionValues[key];
           var locals = getLocals(value, key);
           var viewValue = viewValueFn(scope, locals);
@@ -29671,12 +29671,12 @@ var ngRepeatDirective = ['$parse', '$animate', '$compile', function($parse, $ani
     // TODO(perf): generate setters to shave off ~40ms or 1-1.5%
     scope[valueIdentifier] = value;
     if (keyIdentifier) scope[keyIdentifier] = key;
-    scope.$index = index;
-    scope.$first = (index === 0);
-    scope.$last = (index === (arrayLength - 1));
+    scope.$index = searchIndex;
+    scope.$first = (searchIndex === 0);
+    scope.$last = (searchIndex === (arrayLength - 1));
     scope.$middle = !(scope.$first || scope.$last);
     // jshint bitwise: false
-    scope.$odd = !(scope.$even = (index&1) === 0);
+    scope.$odd = !(scope.$even = (searchIndex&1) === 0);
     // jshint bitwise: true
   };
 
@@ -29745,10 +29745,10 @@ var ngRepeatDirective = ['$parse', '$animate', '$compile', function($parse, $ani
 
         if (trackByExpGetter) {
           trackByIdExpFn = function(key, value, index) {
-            // assign key, value, and $index to the locals so that they can be used in hash functions
+            // assign key, value, and $searchIndex to the locals so that they can be used in hash functions
             if (keyIdentifier) hashFnLocals[keyIdentifier] = key;
             hashFnLocals[valueIdentifier] = value;
-            hashFnLocals.$index = index;
+            hashFnLocals.$index = searchIndex;
             return trackByExpGetter($scope, hashFnLocals);
           };
         }
@@ -29757,7 +29757,7 @@ var ngRepeatDirective = ['$parse', '$animate', '$compile', function($parse, $ani
         // iterator, and the value is objects with following properties.
         //   - scope: bound scope
         //   - element: previous element.
-        //   - index: position
+        //   - searchIndex: position
         //
         // We are using no-proto object so that we don't need to guard against inherited props via
         // hasOwnProperty.
@@ -29803,16 +29803,16 @@ var ngRepeatDirective = ['$parse', '$animate', '$compile', function($parse, $ani
           nextBlockOrder = new Array(collectionLength);
 
           // locate existing items
-          for (index = 0; index < collectionLength; index++) {
-            key = (collection === collectionKeys) ? index : collectionKeys[index];
+          for (searchIndex = 0; searchIndex < collectionLength; searchIndex++) {
+            key = (collection === collectionKeys) ? searchIndex : collectionKeys[searchIndex];
             value = collection[key];
-            trackById = trackByIdFn(key, value, index);
+            trackById = trackByIdFn(key, value, searchIndex);
             if (lastBlockMap[trackById]) {
               // found previously seen block
               block = lastBlockMap[trackById];
               delete lastBlockMap[trackById];
               nextBlockMap[trackById] = block;
-              nextBlockOrder[index] = block;
+              nextBlockOrder[searchIndex] = block;
             } else if (nextBlockMap[trackById]) {
               // if collision detected. restore lastBlockMap and throw an error
               forEach(nextBlockOrder, function(block) {
@@ -29823,7 +29823,7 @@ var ngRepeatDirective = ['$parse', '$animate', '$compile', function($parse, $ani
                   expression, trackById, value);
             } else {
               // new never before seen block
-              nextBlockOrder[index] = {id: trackById, scope: undefined, clone: undefined};
+              nextBlockOrder[searchIndex] = {id: trackById, scope: undefined, clone: undefined};
               nextBlockMap[trackById] = true;
             }
           }
@@ -29836,18 +29836,18 @@ var ngRepeatDirective = ['$parse', '$animate', '$compile', function($parse, $ani
             if (elementsToRemove[0].parentNode) {
               // if the element was not removed yet because of pending animation, mark it as deleted
               // so that we can ignore it later
-              for (index = 0, length = elementsToRemove.length; index < length; index++) {
-                elementsToRemove[index][NG_REMOVED] = true;
+              for (searchIndex = 0, length = elementsToRemove.length; searchIndex < length; searchIndex++) {
+                elementsToRemove[searchIndex][NG_REMOVED] = true;
               }
             }
             block.scope.$destroy();
           }
 
           // we are not using forEach for perf reasons (trying to avoid #call)
-          for (index = 0; index < collectionLength; index++) {
-            key = (collection === collectionKeys) ? index : collectionKeys[index];
+          for (searchIndex = 0; searchIndex < collectionLength; searchIndex++) {
+            key = (collection === collectionKeys) ? searchIndex : collectionKeys[searchIndex];
             value = collection[key];
-            block = nextBlockOrder[index];
+            block = nextBlockOrder[searchIndex];
 
             if (block.scope) {
               // if we have already seen this object, then we need to reuse the
@@ -29865,7 +29865,7 @@ var ngRepeatDirective = ['$parse', '$animate', '$compile', function($parse, $ani
                 $animate.move(getBlockNodes(block.clone), null, previousNode);
               }
               previousNode = getBlockEnd(block);
-              updateScope(block.scope, index, valueIdentifier, value, keyIdentifier, key, collectionLength);
+              updateScope(block.scope, searchIndex, valueIdentifier, value, keyIdentifier, key, collectionLength);
             } else {
               // new item which we don't know about
               $transclude(function ngRepeatTransclude(clone, scope) {
@@ -29881,7 +29881,7 @@ var ngRepeatDirective = ['$parse', '$animate', '$compile', function($parse, $ani
                 // by a directive with templateUrl when its template arrives.
                 block.clone = clone;
                 nextBlockMap[block.id] = block;
-                updateScope(block.scope, index, valueIdentifier, value, keyIdentifier, key, collectionLength);
+                updateScope(block.scope, searchIndex, valueIdentifier, value, keyIdentifier, key, collectionLength);
               });
             }
           }
@@ -30436,7 +30436,7 @@ var ngSwitchDirective = ['$animate', '$compile', function($animate, $compile) {
           selectedScopes = [];
 
       var spliceFactory = function(array, index) {
-          return function() { array.splice(index, 1); };
+          return function() { array.splice(searchIndex, 1); };
       };
 
       scope.$watch(watchExpr, function ngSwitchWatchAction(value) {

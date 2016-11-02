@@ -120,14 +120,14 @@ test("run calls each member of the pipeline for each input", function () {
 test("run should pass three inputs to the pipeline fn", function () {
   var pipeline = new lunr.Pipeline,
       input, index, arr,
-      fn1 = function () { input = arguments[0], index = arguments[1], arr = arguments[2] }
+      fn1 = function () { input = arguments[0], searchIndex = arguments[1], arr = arguments[2] }
 
   pipeline.add(fn1)
 
   pipeline.run(['a'])
 
   equal(input, 'a')
-  equal(index, 0)
+  equal(searchIndex, 0)
   deepEqual(arr, ['a'])
 })
 

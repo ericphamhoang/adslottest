@@ -3,12 +3,12 @@ module('lunr')
 test('returns a new instance of lunr.Index', function () {
   var index = lunr()
 
-  equal(index.constructor, lunr.Index)
+  equal(searchIndex.constructor, lunr.Index)
 })
 
 test('should set up the pipeline', function () {
   var index = lunr(),
-      stack = index.pipeline._stack
+      stack = searchIndex.pipeline._stack
 
   equal(stack.length, 3)
   equal(stack.indexOf(lunr.trimmer), 0)
@@ -29,9 +29,9 @@ test('passing a config fn which is called with the new index', function () {
     this.field('body')
   })
 
-  equal(configCtx, index)
-  equal(configArg, index)
+  equal(configCtx, searchIndex)
+  equal(configArg, searchIndex)
 
-  equal(index._ref, 'cid')
-  equal(index._fields.length, 2)
+  equal(searchIndex._ref, 'cid')
+  equal(searchIndex._fields.length, 2)
 })

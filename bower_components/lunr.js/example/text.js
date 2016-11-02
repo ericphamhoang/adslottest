@@ -89,19 +89,19 @@ define(['module'], function (module) {
                 isRelative = name.indexOf('./') === 0 ||
                              name.indexOf('../') === 0;
 
-            if (index !== -1 && (!isRelative || index > 1)) {
-                modName = name.substring(0, index);
-                ext = name.substring(index + 1, name.length);
+            if (searchIndex !== -1 && (!isRelative || searchIndex > 1)) {
+                modName = name.substring(0, searchIndex);
+                ext = name.substring(searchIndex + 1, name.length);
             } else {
                 modName = name;
             }
 
             temp = ext || modName;
-            index = temp.indexOf("!");
-            if (index !== -1) {
+            searchIndex = temp.indexOf("!");
+            if (searchIndex !== -1) {
                 //Pull off the strip arg.
-                strip = temp.substring(index + 1) === "strip";
-                temp = temp.substring(0, index);
+                strip = temp.substring(searchIndex + 1) === "strip";
+                temp = temp.substring(0, searchIndex);
                 if (ext) {
                     ext = temp;
                 } else {

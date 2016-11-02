@@ -33,7 +33,7 @@ http.createServer(function(req, res){
 
     fs.stat(path, function(err, stat){
       if (err) return error()
-      if (stat.isDirectory()) path = join(path, 'index.html')
+      if (stat.isDirectory()) path = join(path, 'searchIndex.html')
       res.setHeader('Cache-Control', 'no-cache')
       res.setHeader('Content-Type', mime[path.split('.').slice(-1)] || 'application/octet-stream')
       fs.createReadStream(path).pipe(res)

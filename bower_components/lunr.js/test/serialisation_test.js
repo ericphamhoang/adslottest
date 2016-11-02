@@ -16,7 +16,7 @@ module('serialisation', {
   }
 })
 
-test('dumping and loading an index', function () {
+test('dumping and loading an searchIndex', function () {
   var idx = new lunr.Index
 
   idx.field('title', { boost: 10 })
@@ -30,7 +30,7 @@ test('dumping and loading an index', function () {
   deepEqual(idx.search('green plant'), clonedIdx.search('green plant'))
 })
 
-test('dumping and loading an index with a populated pipeline', function () {
+test('dumping and loading an searchIndex with a populated pipeline', function () {
   var idx = lunr(function () {
     this.field('title', { boost: 10 })
     this.field('body')
@@ -45,7 +45,7 @@ test('dumping and loading an index with a populated pipeline', function () {
   deepEqual(idx.search('water'), clonedIdx.search('water'))
 })
 
-test('dumping and loading an index with a custom tokenizer', function () {
+test('dumping and loading an searchIndex with a custom tokenizer', function () {
   var customTokenizer = function () {},
       idx = lunr()
 

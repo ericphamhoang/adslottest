@@ -299,7 +299,7 @@
   Scanner.prototype.scan = function (re) {
     var match = this.tail.match(re);
 
-    if (match && match.index === 0) {
+    if (match && match.searchIndex === 0) {
       var string = match[0];
       this.tail = this.tail.substring(string.length);
       this.pos += string.length;
@@ -316,7 +316,7 @@
   Scanner.prototype.scanUntil = function (re) {
     var index = this.tail.search(re), match;
 
-    switch (index) {
+    switch (searchIndex) {
     case -1:
       match = this.tail;
       this.tail = "";
@@ -325,8 +325,8 @@
       match = "";
       break;
     default:
-      match = this.tail.substring(0, index);
-      this.tail = this.tail.substring(index);
+      match = this.tail.substring(0, searchIndex);
+      this.tail = this.tail.substring(searchIndex);
     }
 
     this.pos += match.length;
