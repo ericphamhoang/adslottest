@@ -17,14 +17,13 @@ app.controller("mainController", function ($scope) {
     //    this.ref('id')
     //});
 
-    $scope.sites.forEach(function(siteElm, siteKey){
+    $scope.sites.forEach(function (siteElm, siteKey) {
 
         var elmCategories = [];
 
-        $scope.categories.forEach(function(catElm, catKey){
+        $scope.categories.forEach(function (catElm, catKey) {
 
-            if (siteElm.categoryIds.indexOf(catElm.id) != -1)
-            {
+            if (siteElm.categoryIds.indexOf(catElm.id) != -1) {
                 elmCategories.push(catElm.description);
             }
 
@@ -36,33 +35,34 @@ app.controller("mainController", function ($scope) {
     console.log($scope.sites);
 
     //Fire search function
-    $scope.search = function(){
+    $scope.search = function () {
 
         //split all query by "," then trim all elements in array
-        querryArr = $scope.queries.split(',').map(function(e){return e.trim();});
+        querryArr = $scope.queries.split(',').map(function (e) {
+            return e.trim();
+        });
 
         $scope.results = [];
 
-        for (i=0; i<querryArr.length; i++)
-        {
+        for (i = 0; i < querryArr.length; i++) {
             queryElm = querryArr[i];
             //rs = rs.concat($scope.searchIndex.search(querryArr[i]));
 
-            $scope.sites.forEach(function(siteElm, siteKey){
-                if (siteElm.siteName.indexOf(queryElm) != -1) {
-                    $scope.results.push(siteElm);
-                }
-                else {
-                    for (i = 0; i < siteElm.categories.length; i++)
-                    {
-                        if (siteElm.categories[i].indexOf(queryElm) != -1)
-                        {
-                            $scope.results.push(siteElm);
-                            break;
+            if (queryElm != "") {
+                $scope.sites.forEach(function (siteElm, siteKey) {
+                    if (siteElm.siteName.indexOf(queryElm) != -1) {
+                        $scope.results.push(siteElm);
+                    }
+                    else {
+                        for (i = 0; i < siteElm.categories.length; i++) {
+                            if (siteElm.categories[i].indexOf(queryElm) != -1) {
+                                $scope.results.push(siteElm);
+                                break;
+                            }
                         }
                     }
-                }
-            })
+                })
+            }
         }
 
         console.log($scope.results);
