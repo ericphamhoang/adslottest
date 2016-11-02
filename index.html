@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="adSlot">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Adslot Test</title>
     <link rel="stylesheet" href="css/styles.css">
+    <!--Javascript Fulltext Search-->
+    <script src="bower_components/lunr.js/lunr.min.js"></script>
+    <!--Angular JS Lib-->
+    <script src="bower_components/angular/angular.min.js"></script>
+    <!--Predefined data-->
+    <script src="js/data.js"></script>
+    <!--Angular Controller-->
+    <script src="js/main.js"></script>
 </head>
-<body>
-<form class="form-wrapper cf" ng-controller="searchController">
-    <h2>Adslot Test</h2>
-    <input type="text" placeholder="Search here..." ng-model="queries" ng-change="search()">
-    <button type="submit">Search</button>
-</form>
-<!--Javascript Fulltext Search-->
-<script src="bower_components/lunr.js/lunr.min.js"></script>
-<!--Angular JS Lib-->
-<script src="bower_components/angular/angular.min.js"></script>
-<!--Predefined data-->
-<script src="js/data.js"></script>
-<!--Angular Controller-->
-<script src="js/main.js"></script>
+<body ng-app="adSlot">
+<div ng-controller="mainController">
+    <!--<form class="form-wrapper cf">-->
+        <h2>Adslot Test</h2>
+        <input type="text" placeholder="Search here..." ng-model="queries" ng-change="search()" >
+        <button type="submit">Search</button>
+    <!--</form>-->
+</div>
 </body>
 </html>
