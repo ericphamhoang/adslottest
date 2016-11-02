@@ -8,6 +8,13 @@ app.controller("searchController", function ($scope) {
 
     $scope.sites = sites;
 
-    console.log($scope.sites);
+    $scope.categories = categories;
+
+    //Fire search function
+    $scope.search = function(){
+
+        console.log($scope.queries);
+
+    }
 
 });
